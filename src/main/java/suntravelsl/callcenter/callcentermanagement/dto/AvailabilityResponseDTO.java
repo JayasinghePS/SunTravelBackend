@@ -9,15 +9,16 @@ import lombok.NoArgsConstructor;
 import suntravelsl.callcenter.callcentermanagement.enums.Availability;
 
 @Data
-@Builder
-@AllArgsConstructor
-@NoArgsConstructor
+@Builder // Enables builder pattern for easy object creation
+@AllArgsConstructor // Creates constructor with all fields
+@NoArgsConstructor // Creates default no-arg constructor
 public class AvailabilityResponseDTO {
 
     private String hotelName;
     private String roomType;
     private Double markedUpPrice;
 
-    @Enumerated(EnumType.STRING)
+    // Enum to represent "AVAILABLE" or "UNAVAILABLE"
+    @Enumerated(EnumType.STRING) // Store enum as string (not number) if mapped to DB
     private Availability availability;
 }

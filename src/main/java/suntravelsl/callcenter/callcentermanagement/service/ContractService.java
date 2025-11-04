@@ -15,7 +15,7 @@ import suntravelsl.callcenter.callcentermanagement.repo.ContractRepo;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import suntravelsl.callcenter.callcentermanagement.repo.HotelRepo;
-import suntravelsl.callcenter.callcentermanagement.repo.RoomTypeRepo;
+// import suntravelsl.callcenter.callcentermanagement.repo.RoomTypeRepo;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -23,7 +23,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-@Transactional
+@Transactional  // Ensures all DB operations inside methods are executed in a single transaction
 public class ContractService {
     @Autowired
     private ContractRepo contractRepo;
@@ -31,15 +31,20 @@ public class ContractService {
     @Autowired
     private HotelRepo hotelRepository;
 
-    @Autowired
-    private RoomTypeRepo roomTypeRepository;
+    // @Autowired
+    // private RoomTypeRepo roomTypeRepository;
 
     @Autowired
     private HotelService hotelService;
+
     @Autowired
-    private ModelMapper modelMapper;
+    private ModelMapper modelMapper;    // Helps map between Entity and DTO classes
 
 
+    /**
+     * Saves a new contract for a hotel.
+     * Maps DTO to Entity, validates date overlaps, and saves it.
+     */
     public ContractDTO saveContract(ContractDTO contractDTO) {
         // Map ContractDTO to Contract entity
         Contract contract = modelMapper.map(contractDTO, Contract.class);
@@ -60,7 +65,10 @@ public class ContractService {
     }
 
 
-    //Here validate the contract
+    /**
+     * Validates that new contract dates don’t overlap with existing contracts
+     * for the same hotel.
+     */
     private void validateContractDates(ContractDTO newContractDTO) {
         List<Contract> existingContracts = contractRepo.findByHotelHotelId(newContractDTO.getHotelId());
 
@@ -84,11 +92,17 @@ public class ContractService {
 
 
 
+     /**
+     * Fetches all contracts in the system and maps them to DTOs.
+     */
     public List<ContractDTO> getAllContracts() {
         List<Contract> contractList = contractRepo.findAll();
         return modelMapper.map(contractList, new TypeToken<List<ContractDTO>>() {}.getType());
     }
 
+    /**
+     * Fetch a single contract by its ID.
+     */
     public Contract getContractById(int id) {
         Contract contract = contractRepo.findById(id).orElse(null);
         if (contract == null) {
@@ -98,6 +112,9 @@ public class ContractService {
     }
 
 
+    /**
+     * Update certain fields in an existing contract by its ID.
+     */    
     public ContractDTO updateContractById(int id, ContractDTO contractDTO) {
         // Check if the contract with the given ID exists
         Contract existingContract = contractRepo.findById(id)
@@ -121,11 +138,15 @@ public class ContractService {
     }
 
 
+     // Helper to convert Entity → DTO
     private ContractDTO convertToDTO(Contract contract) {
         return modelMapper.map(contract, ContractDTO.class);
     }
 
 
+    /**
+     * Deletes a contract by its ID.
+     */
     public boolean deleteContractById(int id) {
         // Check if the contract with the given ID exists
         if (contractRepo.existsById(id)) {
@@ -157,6 +178,10 @@ public class ContractService {
         return contractDTO;
     }
 
+    /**
+     * Returns all contracts that are valid for a given check-in date.
+     * Used by AvailabilityService.
+     */
     public List<ContractDTO> getContractsAvailableForCheckInDate(Date checkInDate) {
 
         List<ContractDTO> allContracts = getAllContracts();

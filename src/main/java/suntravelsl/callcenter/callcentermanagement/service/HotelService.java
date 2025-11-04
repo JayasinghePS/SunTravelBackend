@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import suntravelsl.callcenter.callcentermanagement.dto.HotelDTO;
 import suntravelsl.callcenter.callcentermanagement.dto.RoomTypeDTO;
-import suntravelsl.callcenter.callcentermanagement.entity.Contract;
+// import suntravelsl.callcenter.callcentermanagement.entity.Contract;
 import suntravelsl.callcenter.callcentermanagement.entity.Hotel;
 import suntravelsl.callcenter.callcentermanagement.exception.NotFoundException;
 import suntravelsl.callcenter.callcentermanagement.exception.ResourceNotFoundException;
@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
 @Transactional
 public class HotelService {
         @Autowired
-        private HotelRepo hotelRepo;
+        private HotelRepo hotelRepo;    // For direct database operations on Hotel table
 
         @Autowired
         private RoomTypeService roomTypeService;
@@ -31,11 +31,17 @@ public class HotelService {
         private ModelMapper modelMapper;
 
 
+    /**
+     * Save a new hotel (basic details only, no room types)
+     */
     public HotelDTO saveHotel(HotelDTO hotelDTO){
         hotelRepo.save(modelMapper.map(hotelDTO, Hotel.class));
         return hotelDTO;
     }
 
+    /**
+     * Save a hotel along with its room types in one go.
+     */
     public HotelDTO saveHotelWithRoomTypes(HotelDTO hotelDTO) {
         // Map HotelDTO to Hotel entity
         Hotel hotel = modelMapper.map(hotelDTO, Hotel.class);
@@ -55,12 +61,18 @@ public class HotelService {
         return modelMapper.map(hotel, HotelDTO.class);
     }
 
+    /**
+     * Retrieve all hotels from the database
+     */
      public List<HotelDTO> getAllHotels(){
             List<Hotel> hotelList = hotelRepo.findAll();
             return modelMapper.map(hotelList, new TypeToken<List<HotelDTO>>(){}.getType());
         }
 
 
+    /**
+     * Fetch a single hotel by ID, including its room types.
+     */
     public HotelDTO getHotelWithRoomTypesById(int id) {
         Hotel hotel = hotelRepo.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Hotel not found with id: " + id));
@@ -77,6 +89,9 @@ public class HotelService {
     }
 
 
+    /**
+     * Fetch only the hotel entity (no mapping)
+     */
     public Hotel getHotelById(int id) {
         Hotel hotel = hotelRepo.findById(id).orElse(null);
         if (hotel == null) {
@@ -85,6 +100,9 @@ public class HotelService {
         return hotel;
     }
 
+     /**
+     * Update hotel details (name or location)
+     */
     public HotelDTO updateHotelById(int id, HotelDTO hotelDTO) {
         // Check if the hotel with the given ID exists
         Hotel existingHotel = hotelRepo.findById(id)
@@ -104,11 +122,15 @@ public class HotelService {
 
 
 
+    // Helper to convert entity → DTO
     private HotelDTO convertToDTO(Hotel hotel) {
         return modelMapper.map(hotel, HotelDTO.class);
     }
 
 
+    /**
+     * Delete a hotel by its ID.
+     */
     public boolean deleteHotelById(int id) {
         // Check if the contract with the given ID exists
         if (hotelRepo.existsById(id)) {

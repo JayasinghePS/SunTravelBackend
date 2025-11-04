@@ -15,12 +15,12 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-@Entity
-@Builder
+@Entity // Marks this class as a JPA entity(Java class) mapped to a database table
+@Builder // Allows easy object creation (useful in service logic)
 public class Contract {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id // Primary key for the table
+    @GeneratedValue(strategy = GenerationType.IDENTITY) // Auto-increment by DB
     @Column(updatable = false)
     private int contractId;
 
@@ -36,8 +36,9 @@ public class Contract {
     @Future(message = "End date should be in future")
     private Date endDate;
 
+    // Many contracts belong to one hotel
     @ManyToOne
-    @JoinColumn(name= "hotelId")
+    @JoinColumn(name= "hotelId") // Foreign key column in Contract table
     private Hotel hotel;
 
 }

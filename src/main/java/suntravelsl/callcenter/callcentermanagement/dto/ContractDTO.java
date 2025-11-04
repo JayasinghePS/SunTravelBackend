@@ -18,7 +18,9 @@ public class ContractDTO {
     private Date startDate;
     private Date endDate;
 
+    // Nested DTO – represents which hotel this contract belongs to
     private HotelDTO hotel;
 
+    // List of room types that fall under this contract
     private List<RoomTypeDTO> roomTypes;
 }

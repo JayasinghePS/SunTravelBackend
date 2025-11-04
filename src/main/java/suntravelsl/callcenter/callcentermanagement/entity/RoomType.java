@@ -35,6 +35,7 @@ public class RoomType {
     @Positive(message = "Price should be greater than zero")
     private double price;
 
+    // Many room types belong to one hotel
     @ManyToOne
     @JoinColumn(name= "hotelId")
     private Hotel hotel;

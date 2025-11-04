@@ -5,7 +5,7 @@ import lombok.Data;
 import java.util.Date;
 import java.util.List;
 
-@Data
+@Data // Lombok annotation – auto-generates getters, setters, toString(), equals(), hashCode()
 public class AvailabilityRequestDTO {
     private Date checkInDate;
     private int numberOfNights;

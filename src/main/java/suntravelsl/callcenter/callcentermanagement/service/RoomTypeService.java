@@ -17,12 +17,15 @@ import java.util.List;
 @Transactional
 public class RoomTypeService {
     @Autowired
-    private RoomTypeRepo roomTypeRepo;
+    private RoomTypeRepo roomTypeRepo;  // Repository to perform CRUD on RoomType table
 
     @Autowired
     private ModelMapper modelMapper;
 
 
+    /**
+     * Save a new room type for a hotel.
+     */
     public RoomTypeDTO saveRoomType(RoomTypeDTO roomTypeDTO){
 
         roomTypeDTO.setHotelId(roomTypeDTO.getHotelId());
@@ -31,11 +34,17 @@ public class RoomTypeService {
         return roomTypeDTO;
     }
 
+    /**
+     * Fetch all room types in database
+     */
     public List<RoomTypeDTO> getAllRoomTypes(){
         List<RoomType> roomTypeList = roomTypeRepo.findAll();
         return modelMapper.map(roomTypeList, new TypeToken<List<RoomTypeDTO>>(){}.getType());
     }
 
+    /**
+     * Fetch a single room type by ID
+     */
     public RoomType getRoomTypeById(int id) {
         RoomType roomType = roomTypeRepo.findById(id).orElse(null);
         if (roomType == null) {
@@ -44,12 +53,18 @@ public class RoomTypeService {
         return roomType;
     }
 
+    /**
+     * Get all room types for a given hotel ID
+     */
     public List<RoomTypeDTO> getRoomTypesByHotelId(int hotelId) {
         List<RoomType> roomTypes = roomTypeRepo.findByHotel_HotelId(hotelId);
         return modelMapper.map(roomTypes, new TypeToken<List<RoomTypeDTO>>(){}.getType());
     }
 
 
+    /**
+     * Update details of a room type (name, price, capacity, etc.)
+     */
     public RoomTypeDTO updateRoomTypeById(int id, RoomTypeDTO roomTypeDTO) {
         // Check if the hotel with the given ID exists
         RoomType existingRoomType = roomTypeRepo.findById(id)
@@ -77,11 +92,15 @@ public class RoomTypeService {
     }
 
 
+    // Helper to convert entity → DTO
     private RoomTypeDTO convertToDTO(RoomType roomType) {
         return modelMapper.map(roomType, RoomTypeDTO.class);
     }
 
 
+    /**
+     * Delete a room type by ID
+     */
     public boolean deleteRoomTypeById(int id) {
         // Check if the contract with the given ID exists
         if (roomTypeRepo.existsById(id)) {

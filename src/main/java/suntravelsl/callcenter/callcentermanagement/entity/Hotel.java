@@ -24,9 +24,11 @@ public class Hotel {
     @NotBlank(message = "Hotel location cannot be empty")
     private String location;
 
+    // One hotel can have many contracts
     @OneToMany(mappedBy = "hotel")
     private List<Contract> contracts;
 
+    // One hotel can have many room types
     @OneToMany(mappedBy = "hotel")
     private List<RoomType> roomTypes;
 }

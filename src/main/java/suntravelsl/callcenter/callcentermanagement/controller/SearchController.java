@@ -17,8 +17,10 @@ public class SearchController {
     @Autowired
     private AvailabilityService availabilityService;
 
+     // POST request to check availability
     @PostMapping("/search")
     public ResponseEntity<List<AvailabilityResponseDTO>> checkAvailability(@RequestBody AvailabilityRequestDTO request) {
+        // request body (JSON) → AvailabilityRequestDTO object automatically
         List<AvailabilityResponseDTO> searchResults = availabilityService.checkAvailability(request);
         return ResponseEntity.ok(searchResults);
     }

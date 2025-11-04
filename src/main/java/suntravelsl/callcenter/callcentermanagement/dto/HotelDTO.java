@@ -8,9 +8,9 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-@Getter
-@Setter
-@Component //marks this class as a Spring component
+@Getter //normally no need this when you have @Data already where make both getters and setters
+@Setter //normally no need this when you have @Data already where make both getters and setters
+@Component //marks this class as a Spring component[Spring-managed bean] (optional here, usually not required for DTOs)
 public class HotelDTO {
     private int hotelId;
     private String hotelName;
